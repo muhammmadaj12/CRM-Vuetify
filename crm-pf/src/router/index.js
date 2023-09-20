@@ -1,17 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-// Import your layout component
-import DefaultLayout from '@/layouts/default/Default.vue';
-
 const routes = [
   {
     path: '/',
     component: () => import('@/layouts/default/Default.vue'), // Use the layout component as a wrapper
     children: [
       {
-        path: 'home',
-        name: 'Home',
-        component: () => import('@/views/Home.vue'), // Your Home.vue view
+        path: 'user-managment',
+        name: 'UserManagment',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
+      {
+        path: 'task-managment',
+        name: 'TaskManagment',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
+      {
+        path: 'department-managment',
+        name: 'DepartmentManagment',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
+      {
+        path: 'teams-managment',
+        name: 'TeamManagment',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
     ],
   },
