@@ -18,7 +18,7 @@ const routes = [
       {
         path: 'department-managment',
         name: 'DepartmentManagment',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/views/DepartmentManagement.vue'),
       },
       {
         path: 'teams-managment',
