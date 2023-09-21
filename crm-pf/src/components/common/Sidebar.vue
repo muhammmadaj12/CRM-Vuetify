@@ -37,7 +37,7 @@
                 <div style="cursor: pointer;" @click="logout">
                     <v-btn>
                         <v-icon>mdi-wrench</v-icon>
-                        <span class="pl-2">Logout</span>
+                        <span @click="logout" class="pl-2">Logout</span>
                     </v-btn>
                 </div>
 
@@ -71,7 +71,14 @@ export default {
             this.$router.push("/user-managment");
         },
         logout() {
-        },
+        // Log out the user by clearing the authentication token from localStorage
+        localStorage.removeItem('authToken');
+  
+        // Redirect the user to the login page
+        this.$router.push({ name: 'Login' }); // Assuming the name of your login route is 'Login'
+  
+        // You can also perform additional logout-related actions here
+},
         getNavItemClasses(item) {
             const classes = {
                 'nav-item': true, // Always apply this class
