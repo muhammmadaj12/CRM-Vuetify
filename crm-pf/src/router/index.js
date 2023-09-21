@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
+// import ChatComponent from '../co]';
+import Signup from '@/components//common/Signup.vue';
 
 const routes = [
+  {
+    path: '/signup',
+    name: "Signup",
+    component: Signup,
+  },
   {
     path: '/',
     component: () => import('@/layouts/default/Default.vue'), // Use the layout component as a wrapper
@@ -8,7 +15,7 @@ const routes = [
       {
         path: 'user-managment',
         name: 'UserManagment',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/components/HelloWorld.vue'),
       },
       {
         path: 'task-managment',
