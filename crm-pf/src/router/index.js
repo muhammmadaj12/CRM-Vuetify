@@ -15,7 +15,7 @@ const routes = [
       {
         path: 'user-managment',
         name: 'UserManagment',
-        component: () => import(/* webpackChunkName: "home" */ '@/components/HelloWorld.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/views/UserManagment.vue'),
       },
       {
         path: 'task-managment',
