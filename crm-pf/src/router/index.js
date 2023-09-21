@@ -23,7 +23,7 @@ const routes = [
       {
         path: 'teams-managment',
         name: 'TeamManagment',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Teams-Managment.vue'),
       },
     ],
   },
