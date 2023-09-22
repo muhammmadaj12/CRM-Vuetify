@@ -20,7 +20,7 @@
                     </v-row> 
                 </div>
                 <v-divider></v-divider> -->
-                <h3 class="pl-3"><u>Menu Items:</u></h3>
+                <h4 class="pl-3 py-3"><u>Menu Items:</u></h4>
                 <v-list id="side-nav">
                     <v-list-item-group>
                         <v-list-item class="pl-3" v-for="(item, index) in navbarItems" :key="index">
@@ -31,15 +31,6 @@
                         </v-list-item>
                     </v-list-item-group>
                 </v-list>
-                <v-spacer>
-
-                </v-spacer>
-                <div style="cursor: pointer;" @click="logout">
-                    <v-btn>
-                        <v-icon>mdi-wrench</v-icon>
-                        <span class="pl-2">Logout</span>
-                    </v-btn>
-                </div>
 
             </div>
         </v-navigation-drawer>
@@ -47,7 +38,12 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-app-bar-title>Menu</v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-app-bar-title class="text-end pr-2">Access Controls</v-app-bar-title>
+            <div style="cursor: pointer;" @click="logout">
+                    <v-btn>
+                        <v-icon>mdi-wrench</v-icon>
+                        <span class="pl-2">Logout</span>
+                    </v-btn>
+                </div>
         </v-app-bar>
 
         <v-main>
