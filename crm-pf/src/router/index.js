@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
 // import ChatComponent from '../co]';
-import Signup from '@/components//common/Signup.vue';
+import Login from '@/views/Login.vue';
 
 const routes = [
   {
-    path: '/signup',
-    name: "Signup",
-    component: Signup,
+    path: '/',
+    name: "Login",
+    component: Login,
   },
   {
-    path: '/',
+    path: '/dashboard',
     component: () => import('@/layouts/default/Default.vue'), // Use the layout component as a wrapper
     children: [
       {
@@ -35,12 +35,12 @@ const routes = [
       {
         path: 'user-permission',
         name: 'UserPermission',
-        component: () => import(/* webpackChunkName: "home" */ '@/components/HelloWorld.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Admin/UserPerm.vue'),
       },
       {
         path: 'task-permission',
         name: 'TaskPermission',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () => import(/* webpackChunkName: "home" */ '@/components/HelloWorld.vue'),
       },
       {
         path: 'department-permission',

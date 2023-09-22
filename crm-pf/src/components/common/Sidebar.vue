@@ -23,7 +23,7 @@
                 <h4 class="pl-3 py-3"><u>Menu Items:</u></h4>
                 <v-list id="side-nav">
                     <v-list-item-group>
-                        <v-list-item class="pl-3" v-for="(item, index) in navbarItems" :key="index">
+                        <v-list-item v-for="(item, index) in filteredNavbarItems" :key="index" class="pl-3">
                             <router-link :to="item.attrs.to" :class="getNavItemClasses(item)">
                                 <v-icon>{{ item.icon }}</v-icon> <span class="pl-2">{{ item.title }} </span>
                             </router-link>
@@ -39,11 +39,11 @@
             <v-app-bar-title>Menu</v-app-bar-title>
             <v-spacer></v-spacer>
             <div style="cursor: pointer;" @click="logout">
-                    <v-btn>
-                        <v-icon>mdi-wrench</v-icon>
-                        <span class="pl-2">Logout</span>
-                    </v-btn>
-                </div>
+                <v-btn>
+                    <v-icon>mdi-wrench</v-icon>
+                    <span class="pl-2">Logout</span>
+                </v-btn>
+            </div>
         </v-app-bar>
 
         <v-main>
@@ -51,9 +51,10 @@
         </v-main>
     </v-app>
 </template>
-  
+ 
 <script>
 import { navbarItems } from '@/constant/Routes&Permissions.js';
+
 export default {
     name: 'Sidebar',
     data() {
@@ -62,11 +63,33 @@ export default {
             navbarItems: navbarItems,
         };
     },
+    computed: {
+        userPermission() {
+            const userPermission = localStorage.getItem('userPermission');
+            console.log('User Permission:', userPermission); // Add this line for debugging
+            return userPermission;
+
+        },
+
+        filteredNavbarItems() {
+            // Filter the navbar items based on the user's permission and the presence of useroption
+            if (this.userPermission.includes('can-grant-permission')) {
+                return navbarItems.filter((item) => item.useroption === true);
+            } else {
+                return navbarItems.filter((item) => item.useroption === false || item.useroption === undefined);
+            }
+        },
+    },
     methods: {
         goHome() {
             this.$router.push("/user-managment");
         },
         logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userPermission');
+
+            // Redirect the user to the login page
+            this.$router.push({ name: 'Login' });
         },
         getNavItemClasses(item) {
             const classes = {
