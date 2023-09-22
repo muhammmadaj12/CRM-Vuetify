@@ -32,6 +32,26 @@ const routes = [
         name: 'TeamManagment',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
+      {
+        path: 'user-permission',
+        name: 'UserPermission',
+        component: () => import(/* webpackChunkName: "home" */ '@/components/HelloWorld.vue'),
+      },
+      {
+        path: 'task-permission',
+        name: 'TaskPermission',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
+      {
+        path: 'department-permission',
+        name: 'DepartmentPermission',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
+      {
+        path: 'teams-permission',
+        name: 'TeamPermission',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+      },
     ],
   },
 ];
