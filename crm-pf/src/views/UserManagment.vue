@@ -66,6 +66,7 @@ export default {
             editedUser: {
                 name: "",
                 email: "",
+
             },
             editedIndex: -1,
             successSnackbar: true,
@@ -89,6 +90,7 @@ export default {
                 });
         },
         onUserAdded(user) {
+            console.log('User Added:', user);
             this.users.push(user);
 
         },
@@ -100,7 +102,7 @@ export default {
         saveUser() {
             this.successMessage = "User data saved successfully";
             this.successSnackbar = true;
-            fetch(`http://127.0.0.1:8000/api/users/${this.editedUser.id}`, {
+            fetch(`http://127.0.0.1:8000/api/users/${123}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -125,19 +127,33 @@ export default {
             };
             this.editedIndex = -1;
         },
-        deleteUser(userId) {
-            this.successMessage = "User data delete successfully";
-            this.successSnackbar = true;
-            fetch(`http://127.0.0.1:8000/api/users/${userId}`, {
-                method: "DELETE",
-            })
-                .then(() => {
-                    this.users = this.users.filter((user) => user.id !== userId);
-                })
-                .catch((error) => {
-                    console.error("Error deleting user:", error);
-                });
+        confirmDeleteUser(user) {
+            this.confirmedUser = user; // Store the user object to be deleted
+            this.deleteDialog = true;
         },
+        deleteUser(user) {
+            if (user) {
+                const deleteUrl = `http://127.0.0.1:8000/api/users/${user.id}`;
+
+                // Make the DELETE request with the correct URL from the user object
+                fetch(deleteUrl, {
+                    method: "DELETE",
+                })
+                    .then(() => {
+                        // Remove the deleted user from the local users array
+                        this.users = this.users.filter((u) => u.id !== user.id);
+                        this.successMessage = "User data deleted successfully";
+                        this.successSnackbar = true;
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting user:", error);
+                    });
+
+                // Close the delete confirmation dialog
+                this.deleteDialog = false;
+            }
+        },
+
         confirmDeleteUser(userId) {
             this.confirmedUserId = userId;
             this.deleteDialog = true;
