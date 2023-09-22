@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <v-navigation-drawer v-model="drawer" style="background-color:;">
+        <v-navigation-drawer v-model="drawer" >
             <div class="py-3" id="drawer-logo" @click="goHome">
                 <v-img alt="Logo" src="@/assets/fevicon.png" />
             </div>
@@ -25,7 +25,7 @@
                     <v-list-item-group>
                         <v-list-item class="pl-3" v-for="(item, index) in navbarItems" :key="index">
                             <router-link :to="item.attrs.to" :class="getNavItemClasses(item)">
-                                <v-icon>{{ item.icon }}</v-icon> <span class="pl-2">{{ item.title }} </span>
+                                <v-icon v-if = "useroption">{{ item.icon }}</v-icon> <span class="pl-2">{{ item.title }} </span>
                             </router-link>
                             <v-divider class="py-3"></v-divider>
                         </v-list-item>
