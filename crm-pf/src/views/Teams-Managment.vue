@@ -1,108 +1,55 @@
 <template>
-  <div>
-    <h1>Team Management</h1>
-    
-    <!-- Form for Adding/Updating Teams -->
-    <v-card>
-      <v-card-title>{{ isEditing ? 'Update Team' : 'Add Team' }}</v-card-title>
-      <v-card-text>
-        <v-form @submit.prevent="isEditing ? updateTeam() : addTeam()">
-          <v-text-field
-            v-model="team.name"
-            label="Full Name"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="team.description"
-            label="Description"
-            required
-          ></v-text-field>
-          <v-select
-            v-model="team.department"
-            :items="departments"
-            label="Department"
-            required
-          ></v-select>
-          
-          <!-- Select team members -->
-          <v-select
-            v-model="team.members"
-            :items="teamMembers"
-            label="Team Members"
-            multiple
-          ></v-select>
-          
-          <v-btn type="submit" color="primary">{{ isEditing ? 'Update' : 'Add' }}</v-btn>
-        </v-form>
-      </v-card-text>
-    </v-card>
-
-    <!-- List of Teams -->
-    <v-card>
-      <v-card-title>Teams</v-card-title>
-      <v-card-text>
-        <v-list>
-          <v-list-item v-for="(team, index) in teams" :key="index">
-            <v-list-item-content>
-              <v-list-item-title>{{ team.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ team.description }}</v-list-item-subtitle>
-              <v-list-item-subtitle>Department: {{ team.department }}</v-list-item-subtitle>
-              <v-list-item-subtitle>Members: {{ team.members.join(', ') }}</v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-btn @click="editTeam(index)" color="primary">Edit</v-btn>
-              <v-btn @click="deleteTeam(index)" color="error">Delete</v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
-    </v-card>
-  </div>
+  <v-form>
+    <v-text-field v-model="team.name" label="Name"></v-text-field>
+    <v-text-field v-model="team.department_id" label="Department ID"></v-text-field>
+    <v-text-field v-model="team.teamlead_id" label="Team Lead ID"></v-text-field>
+    <v-btn @click="logData" color="primary">Log Data</v-btn>
+    <v-btn @click="submitForm" color="primary">Save</v-btn>
+  </v-form>
 </template>
-
 <script>
+import axios from 'axios';
+
 export default {
+  props: {
+    teamId: {
+      type: Number,
+      default: null,
+    },
+  },
   data() {
     return {
       team: {
-        name: "",
-        description: "",
-        department: null,
-        members: [], // Array to store team members
+        name: '',
+        department_id: '',
+        teamlead_id: '',
       },
-      teams: [], // An array to store team data
-      teamMembers: ["Member 1", "Member 2", "Member 3"], // An array of team member options
-      departments: ["Department A", "Department B", "Department C"], // An array of department options
-      isEditing: false, // Indicates whether we are editing an existing team
-      editIndex: null, // Index of the team being edited
     };
   },
   methods: {
-    addTeam() {
-      // Handle team addition logic
-      this.teams.push({ ...this.team });
-      this.clearForm();
+    logData() {
+      // Log the data entered by the user
+      console.log('Data entered by the user:', this.team);
     },
-    editTeam(index) {
-      // Handle team editing logic
-      this.isEditing = true;
-      this.editIndex = index;
-      this.team = { ...this.teams[index] };
-    },
-    updateTeam() {
-      // Handle team update logic
-      this.teams.splice(this.editIndex, 1, { ...this.team });
-      this.clearForm();
-    },
-    deleteTeam(index) {
-      // Handle team deletion logic
-      this.teams.splice(index, 1);
-    },
-    clearForm() {
-      // Clear the form and reset editing mode
-      this.team = { name: "", description: "", department: null, members: [] };
-      this.isEditing = false;
-      this.editIndex = null;
+    async submitForm() {
+      try {
+        if (this.teamId !== null) {
+          // If teamId is not null, it's an update operation, send a PUT request
+          await axios.put(`http://localhost:8000/api/teams/${this.teamId}`, this.team);
+          // Handle success for update
+          this.$router.push('/teams'); // Redirect to the team list after update
+          this.$emit('success', 'Team updated successfully');
+        } else {
+          // If teamId is null, it's a new team creation, send a POST request
+          const response = await axios.post('http://localhost:8000/api/team/add', this.team);
+          // Handle success for creation
+          this.$emit('success', 'Team created successfully');
+        }
+      } catch (error) {
+        // Handle error responses
+        console.error('Error:', error);
+        this.$emit('error', 'Failed to save team');
+      }
     },
   },
 };
