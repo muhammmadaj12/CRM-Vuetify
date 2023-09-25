@@ -66,7 +66,7 @@ export default {
     computed: {
         userPermission() {
             const userPermission = localStorage.getItem('userPermission');
-            console.log('User Permission:', userPermission); // Add this line for debugging
+            // console.log('User Permission:', userPermission); // Add this line for debugging
             return userPermission;
 
         },

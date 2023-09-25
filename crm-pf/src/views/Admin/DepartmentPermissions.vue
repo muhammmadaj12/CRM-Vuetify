@@ -1,8 +1,8 @@
 <template>
     <v-card>
         <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
-            <v-tab value="1">All Users</v-tab>
-            <v-tab value="2">All Users Permissions</v-tab>
+            <v-tab value="1">Departments Info</v-tab>
+            <v-tab value="2">Department Permissions</v-tab>
         </v-tabs>
         <v-window v-model="tab">
             <v-window-item value="1">
@@ -10,23 +10,26 @@
                     <v-table fixed-header height="300px">
                         <thead>
                             <tr>
-                                <th class="text-left">id</th>
+                                <th class="text-left">ID</th>
                                 <th class="text-left">Name</th>
-                                <th class="text-left">Email</th>
+                                <th colspan="2" class="text-left">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="user in users" :key="user.id">
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.email }}</td>
+                            <!-- Render department data here -->
+                            <tr v-for="department in departments" :key="department.id">
+                                <td>{{ department.id }}</td>
+                                <td>{{ department.name }}</td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </v-table>
                 </v-container>
             </v-window-item>
             <v-window-item value="2">
-                <h1>Hello World</h1>
+                <v-container fluid>
+                    <!-- Add content for tab 2 here if needed -->
+                </v-container>
             </v-window-item>
         </v-window>
     </v-card>
@@ -36,15 +39,17 @@
 import axios from 'axios';
 
 export default {
-    data: () => ({
-        tab: null,
-        users: [], // Store the fetched users here
-    }),
+    data() {
+        return {
+            tab: null,
+            departments: [], // Store the fetched department data
+        };
+    },
     created() {
-        this.fetchUsers(); // Fetch users when the component is created
+        this.fetchDepartments(); // Fetch department data when the component is created
     },
     methods: {
-        fetchUsers() {
+        fetchDepartments() {
             // Get the authentication token from localStorage
             const authToken = localStorage.getItem('authToken');
 
@@ -60,16 +65,18 @@ export default {
             };
 
             // Make a GET request to the API endpoint with headers
-            axios.get('http://10.0.10.114:8000/api/users', { headers })
+            axios
+                .get('http://10.0.10.114:8000/api/departments', { headers })
                 .then((response) => {
-                    // Set the fetched users to the data property
-                    this.users = response.data.data;
-                    console.log(this.users)
+                    // Set the fetched department data to the data property
+                    this.departments = response.data;
+                    console.log('Fetched Departments:', this.departments);
                 })
                 .catch((error) => {
-                    console.error('Error fetching users:', error);
+                    console.error('Error fetching departments:', error);
                 });
         },
     },
 };
 </script>
+  
