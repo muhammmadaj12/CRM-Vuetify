@@ -37,6 +37,7 @@
   
 <script>
 import axios from 'axios';
+import { CRM_API } from '@/constant/ApiConfig';
 
 export default {
     data() {
@@ -66,11 +67,11 @@ export default {
 
             // Make a GET request to the API endpoint with headers
             axios
-                .get('http://10.0.10.114:8000/api/departments', { headers })
+                .get(`${CRM_API}api/departments`, { headers })
                 .then((response) => {
                     // Set the fetched department data to the data property
                     this.departments = response.data;
-                    console.log('Fetched Departments:', this.departments);
+                    // console.log('Fetched Departments:', this.departments);
                 })
                 .catch((error) => {
                     console.error('Error fetching departments:', error);

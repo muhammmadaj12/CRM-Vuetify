@@ -32,6 +32,7 @@
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { CRM_API } from '@/constant/ApiConfig';
 import axios from 'axios'; // Import Axios
 const email = ref("");
 const password = ref("");
@@ -49,7 +50,7 @@ const login = async (e) => {
     e.preventDefault();
 
     try {
-        const response = await axios.post('http://10.0.10.114:8000/api/users/login',
+        const response = await axios.post(`${CRM_API}api/users/login`,
             {
                 email: email.value,
                 password: password.value,

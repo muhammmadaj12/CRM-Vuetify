@@ -45,8 +45,10 @@
     </v-card>
 </template>
   
+
 <script>
 import axios from 'axios';
+import { CRM_API } from '@/constant/ApiConfig';
 
 export default {
     data: () => ({
@@ -73,7 +75,7 @@ export default {
             };
 
             // Make a GET request to the API endpoint with headers
-            axios.get('http://10.0.10.114:8000/api/users', { headers })
+            axios.get(`${CRM_API}api/users`, { headers })
                 .then((response) => {
                     // Set the fetched users to the data property
                     this.users = response.data.data;

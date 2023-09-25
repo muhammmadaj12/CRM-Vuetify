@@ -1,0 +1,1 @@
+export const CRM_API = 'http://10.0.10.114:8000/';

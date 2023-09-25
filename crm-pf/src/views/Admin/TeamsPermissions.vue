@@ -37,6 +37,7 @@
   
 <script>
 import axios from 'axios';
+import { CRM_API } from '@/constant/ApiConfig';
 
 export default {
     data() {
@@ -65,7 +66,7 @@ export default {
             };
 
             // Make a GET request to the API endpoint with headers
-            axios.get('http://10.0.10.114:8000/api/teams', { headers })
+            axios.get(`${CRM_API}api/teams`, { headers })
                 .then((response) => {
                     // Set the fetched teams to the data property
                     this.teams = response.data; // Check the API response structure

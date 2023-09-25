@@ -38,6 +38,7 @@
   
 <script>
 import axios from 'axios';
+import { CRM_API } from '@/constant/ApiConfig';
 
 export default {
     data() {
@@ -66,11 +67,11 @@ export default {
             };
 
             // Make a GET request to the API endpoint with headers
-            axios.get('http://10.0.10.114:8000/api/tasks', { headers })
+            axios.get(`${CRM_API}api/tasks`, { headers })
                 .then((response) => {
                     // Set the fetched tasks to the data property
                     this.tasks = response.data; // Check the API response structure
-                    console.log('Fetched Tasks:', this.tasks);
+                    // console.log('Fetched Tasks:', this.tasks);
                 })
                 .catch((error) => {
                     console.error('Error fetching tasks:', error);
