@@ -1,19 +1,7 @@
 <template>
     <div>
-        <add-user @user-added="onUserAdded"></add-user>
-        <v-divider></v-divider>
-        <v-list>
-            <v-list-item v-for="(user, index) in users" :key="index">
-                <v-list-item-content>
-                    <v-list-item-title>{{ user.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                    <v-btn @click="editUser(user)">Edit</v-btn>
-                    <v-btn @click="confirmDeleteUser(user.id)">Delete</v-btn>
-                </v-list-item-action>
-            </v-list-item>
-        </v-list>
+        <button id="button1" @click="openForm">Open Form</button>
+
         <!-- User Update Dialog -->
         <v-dialog v-model="editDialog" max-width="400px">
             <!-- ... Existing dialog content ... -->
@@ -29,6 +17,38 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(user, index) in users" :key="index">
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <div>
+                            <v-btn @click="editUser(user)">
+                                <v-icon>mdi-pencil</v-icon> Edit
+                            </v-btn>
+                            <v-btn @click="confirmDeleteUser(user.id)">
+                                <v-icon>mdi-delete</v-icon> Delete
+                            </v-btn>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Add User Form (Initially hidden) -->
+        <div v-if="showForm">
+            <add-user @user-added="onUserAdded" @close-form="closeForm"></add-user>
+            <v-divider></v-divider>
+        </div>
 
         <!-- Success Snackbar -->
         <v-snackbar v-model="successSnackbar" :timeout="3000" color="success">
@@ -52,6 +72,7 @@
     </div>
 </template>
   
+  
 <script>
 import AddUser from "@/components/AddUser.vue";
 
@@ -69,16 +90,23 @@ export default {
 
             },
             editedIndex: -1,
-            successSnackbar: true,
+            successSnackbar: false,
             successMessage: "",
             deleteDialog: false, // Add delete confirmation dialog data property
             confirmedUserId: null, // Store the user ID to be deleted
+            showForm: false,
         };
     },
+
+
     mounted() {
         this.fetchUsers();
     },
     methods: {
+        openForm() {
+            // When the button is clicked, toggle the value of showForm
+            this.showForm = !this.showForm;
+        },
         fetchUsers() {
             fetch("http://127.0.0.1:8000/api/users")
                 .then((response) => response.json())
@@ -90,9 +118,13 @@ export default {
                 });
         },
         onUserAdded(user) {
-            console.log('User Added:', user);
             this.users.push(user);
-
+            console.log('User Added:', user);
+            this.showForm = false;
+        },
+        closeForm() {
+            // Close the form without adding a user (e.g., cancel button)
+            this.showForm = false;
         },
         editUser(user) {
             this.editedIndex = this.users.indexOf(user);
@@ -164,4 +196,71 @@ export default {
     },
 };
 </script>
-  
+<style>
+/* Style the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+thead {
+    background-color: #f2f2f2;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Style the buttons within the table */
+v-btn {
+    padding: 6px 12px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    /* Add some spacing between buttons */
+}
+
+v-btn:hover {
+    background-color: #0056b3;
+}
+
+#button1 {
+    padding: 10px 20px;
+    /* Adjust padding as needed */
+    background-color: #007BFF;
+    /* Background color */
+    color: #fff;
+    /* Text color */
+    border: none;
+    /* Remove button border */
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 0px;
+
+}
+
+#button1 {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 850px;
+}
+
+#button1:hover {
+    background-color: #0056b3;
+    /* Background color on hover */
+}
+</style>
+
+
