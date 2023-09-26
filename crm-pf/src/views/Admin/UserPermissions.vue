@@ -1,5 +1,14 @@
 <template>
-    <v-card>
+    <div>
+        <v-row class="py-3">
+            <v-col cols="6" class="pl-5">
+                <h1 style="color: plum;">Users Info</h1>
+            </v-col>
+            <v-col cols="6" class="text-end">
+                <v-btn @click="openAddDepartmentDialog">Add User</v-btn>
+            </v-col>            
+        </v-row>
+        <v-card>
         <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
             <v-tab value="1">Users Info</v-tab>
             <v-tab value="2">Users Permissions</v-tab>
@@ -21,6 +30,14 @@
                                 <td>{{ user.id }}</td>
                                 <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
+                                <td>
+                                        <v-btn @click="editTask(task.id)">
+                                            <i class="fa-regular fa-pen-to-square fa-xs" style="color: #000000;"></i>
+                                        </v-btn>
+                                        <v-btn class="ml-2" @click="deleteTask(task.id)">
+                                            <i class="fa-solid fa-trash fa-xs" style="color: #000000;"></i>
+                                        </v-btn>
+                                    </td>
                             </tr>
                         </tbody>
                     </v-table>
@@ -43,6 +60,7 @@
             </v-window-item>
         </v-window>
     </v-card>
+    </div>
 </template>
   
 

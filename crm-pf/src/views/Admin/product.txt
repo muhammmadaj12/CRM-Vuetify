@@ -1,0 +1,34 @@
+ try {
+        const response = await axios.post(`${CRM_API}api/users/login`,
+            {
+                email: email.value,
+                password: password.value,
+            },
+            {
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+        if (response.status === 200) {
+            const { token, user } = response.data; // Assuming your API returns a token and user object
+            localStorage.setItem('authToken', token); // Store the token in local storage
+            localStorage.setItem('userPermission', JSON.stringify(user.permissions)); // Store the user's permissions as a JSON string
+            router.push({ path: '/dashboard/user-managment' });
+            email.value = '';
+            password.value = '';
+        }
+        else {
+            // Handle non-2xx HTTP response status codes here
+            console.log('HTTP error:', response.status);
+            alert("Login Failed");
+            return;
+        }
+
+        // router.push({ path: "/dashboard/user-managment", });
+
+        alert("Login successfully");
+        // Handle the response data as needed
+    } catch (error) {
+        // Handle other types of errors, e.g., network issues
+        console.error('Error:', error);
+        alert("User not found");
+    }
