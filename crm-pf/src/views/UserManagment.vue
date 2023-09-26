@@ -1,13 +1,14 @@
 <template>
     <div>
-        <button @click="showUserForm = true; showRollForm = false">Add User</button>
-        <button @click="showUserForm = false; showRollForm = true">Add Roll</button>
+        <button @click="showUserForm = true; showRollForm = false" class="action-button user-button">Add User</button>
+        <button @click="showUserForm = false; showRollForm = true" class="action-button roll-button">Add Roll</button>
         <table v-if="showUserForm">
             <!-- Table headers -->
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Role</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -17,6 +18,7 @@
                 <tr v-for="(user, index) in users" :key="index">
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
                     <td>
                         <div>
                             <v-btn @click="editUser(user)">
@@ -37,6 +39,7 @@
                 <v-card-text>
                     <v-text-field v-model="editedUser.name" label="Name"></v-text-field>
                     <v-text-field v-model="editedUser.email" label="Email"></v-text-field>
+                    <v-select v-model="selectedRole" :items="roles" label="Select Role" required></v-select>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" @click="saveUser">Save</v-btn>
@@ -47,58 +50,59 @@
 
 
         <!-- Add User Form -->
-        <div v-if="showUserForm">
-
-            <form @submit.prevent="addUser">
+        <div>
+            <button v-if="!showForm" @click="showForm = true" class="action-button user-button">
+                Add User
+            </button>
+            <button v-else @click="showForm = false" class="action-button user-button">
+                Add User
+            </button>
+            <form v-if="showForm" @submit.prevent="addUser" class="user-form">
+                <!-- User form fields go here -->
                 <label for="userName">User Name:</label>
                 <input type="text" v-model="userName" required><br><br>
 
                 <label for="userEmail">User Email:</label>
                 <input type="email" v-model="userEmail" required><br><br>
-                <label>User Role:</label><br>
-                <input type="radio" id="admin" value="admin" v-model="userRole">
-                <label for="admin">Admin</label><br>
-                <input type="radio" id="user" value="user" v-model="userRole">
-                <label for="user">User</label><br>
-                <input type="radio" id="guest" value="guest" v-model="userRole">
-                <label for="guest">Guest</label><br><br>
 
-                <button type="submit">Add User</button>
+                <v-select v-model="selectedRole" :items="roles" :rules="[v => !!v || 'Item is required']"
+                    label="Select Role" required></v-select>
+                <br><br>
+
+                <button type="submit">Submit</button>
             </form>
         </div>
 
         <!-- Add Roll Form -->
-        <div v-if="showRollForm">
+        <form v-if="showRollForm" @submit.prevent="addRoll" class="roll-form">
+            <!-- Roll form fields go here -->
+            <label for="rollName">Roll Name:</label>
+            <input type="text" v-model="rollName" required><br><br>
 
-            <form @submit.prevent="addRoll">
-                <label for="rollName">Roll Name:</label>
-                <input type="text" v-model="rollName" required><br><br>
+            <label for="rollDescription">Roll Description:</label>
+            <textarea v-model="rollDescription" rows="4" cols="50"></textarea><br><br>
 
-                <label for="rollDescription">Roll Description:</label>
-                <textarea v-model="rollDescription" rows="4" cols="50"></textarea><br><br>
+            <label for="rollPrice">Roll Price:</label>
+            <input type="number" v-model="rollPrice" step="0.01" required><br><br>
 
-                <label for="rollPrice">Roll Price:</label>
-                <input type="number" v-model="rollPrice" step="0.01" required><br><br>
-
-                <button type="submit">Add Roll</button>
-            </form>
-        </div>
+            <button type="submit">Submit</button>
+        </form>
 
 
     </div>
 </template>
   
 <script>
- 
+
 export default {
-    components: {
 
-
-    },
     data() {
         return {
+            selectedRole: "", // Selected role will be stored here
+            roles: ["Guest", "Admin", "Administrator"], // Array of role options
             users: [],
             showUserForm: false,
+            showForm: false,
             showRollForm: false,
             userName: "",
             userEmail: "",
@@ -112,6 +116,7 @@ export default {
             // Handle user addition logic here
             console.log("User Name:", this.userName);
             console.log("User Email:", this.userEmail);
+            console.log("selectedRole:", this.selectedRole)
             // You can send a request to add a user to your backend here
         },
         addRoll() {
@@ -120,6 +125,9 @@ export default {
             console.log("Roll Description:", this.rollDescription);
             console.log("Roll Price:", this.rollPrice);
             // You can send a request to add a roll to your backend here
+            // Reset form fields
+
+            // Hide the form
         },
         addUser() {
             // Validate user inputs if needed
@@ -132,6 +140,7 @@ export default {
             const newUser = {
                 name: this.userName,
                 email: this.userEmail,
+                role: this.selectedRole,
             };
 
             // Push the new user to the users array
@@ -140,11 +149,56 @@ export default {
             // Clear the form fields
             this.userName = "";
             this.userEmail = "";
+            this.selectedRole = "";
+            this.showForm = false;
+            this.showUserForm = false;
         },
     },
 };
 </script>
 <style>
+.action-button {
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-left: 50px;
+    /* Adjust the margin value as needed */
+}
+
+
+
+
+.action-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s, color 0.2s;
+    margin: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Style the "Add User" button */
+.user-button {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+.user-button:hover {
+    background-color: #0056b3;
+}
+
+/* Style the "Add Roll" button */
+.roll-button {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.roll-button:hover {
+    background-color: #45a049;
+}
+
 /* CSS for the Add User Form */
 form {
     margin: 20px;
