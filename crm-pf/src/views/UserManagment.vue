@@ -1,106 +1,87 @@
 <template>
-    <div>
-        <button @click="showUserForm = true; showRollForm = false" class="action-button user-button">Add User</button>
-        <button @click="showUserForm = false; showRollForm = true" class="action-button roll-button">Add Roll</button>
-        <table v-if="showUserForm">
-            <!-- Table headers -->
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <!-- Table body -->
-            <tbody>
-                <tr v-for="(user, index) in users" :key="index">
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.role }}</td>
-                    <td>
-                        <div>
-                            <v-btn @click="editUser(user)">
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                            <v-btn @click="confirmDeleteUser(user.id)">
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <v-dialog v-model="editDialog" max-width="400px">
-            <!-- ... Existing dialog content ... -->
-            <v-card>
-                <v-card-title>Edit User</v-card-title>
-                <v-card-text>
-                    <v-text-field v-model="editedUser.name" label="Name"></v-text-field>
-                    <v-text-field v-model="editedUser.email" label="Email"></v-text-field>
-                    <v-select v-model="selectedRole" :items="roles" label="Select Role" required></v-select>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="primary" @click="saveUser">Save</v-btn>
-                    <v-btn color="red" @click="cancelEdit">Cancel</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-
-        <!-- Add User Form -->
-        <div>
-            <button v-if="!showForm" @click="showForm = true" class="action-button user-button">
+    <v-app>
+        <v-container>
+            <v-btn @click="showUserForm = true; showRollForm = false; showForm = true" class="action-button user-button">
                 Add User
-            </button>
-            <button v-else @click="showForm = false" class="action-button user-button">
-                Add User
-            </button>
-            <form v-if="showForm" @submit.prevent="addUser" class="user-form">
-                <!-- User form fields go here -->
-                <label for="userName">User Name:</label>
-                <input type="text" v-model="userName" required><br><br>
+            </v-btn>
+            <v-btn @click="showUserForm = false; showRollForm = true; showForm = false" class="action-button roll-button">
+                Add Roll
+            </v-btn>
 
-                <label for="userEmail">User Email:</label>
-                <input type="email" v-model="userEmail" required><br><br>
+            <v-container>
+                <table v-if="showUserForm" class="user-table">
+                    <!-- Table headers -->
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <!-- Table body -->
+                    <tbody>
+                        <tr v-for="(user, index) in userList" :key="index">
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <div>
+                                    <button @click="editUser(user)">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </button>
+                                    <button @click="confirmDeleteUser(user.id)">
+                                        <i class="mdi mdi-delete"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <v-row>
+                    <v-col cols="6">
+                        <!-- User Input Form -->
+                        <v-form @submit.prevent="submitUser">
+                            <v-text-field v-model="userName" label="User Name" required></v-text-field>
+                            <v-text-field v-model="userEmail" label="User Email" required></v-text-field>
+                            <v-select v-model="selectedRole" :items="roles" label="Select Role" required></v-select>
+                            <v-btn type="submit" color="primary">Submit</v-btn>
+                        </v-form>
+                    </v-col>
+                </v-row>
 
-                <v-select v-model="selectedRole" :items="roles" :rules="[v => !!v || 'Item is required']"
-                    label="Select Role" required></v-select>
-                <br><br>
+                <!-- Table to Display User Data -->
 
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+            </v-container>
 
-        <!-- Add Roll Form -->
-        <form v-if="showRollForm" @submit.prevent="addRoll" class="roll-form">
-            <!-- Roll form fields go here -->
-            <label for="rollName">Roll Name:</label>
-            <input type="text" v-model="rollName" required><br><br>
+            <v-dialog v-model="editDialog" max-width="400px">
+                <!-- ... Existing dialog content ... -->
+                <!-- Replace this with your edit user form using Vuetify components -->
+            </v-dialog>
 
-            <label for="rollDescription">Roll Description:</label>
-            <textarea v-model="rollDescription" rows="4" cols="50"></textarea><br><br>
-
-            <label for="rollPrice">Roll Price:</label>
-            <input type="number" v-model="rollPrice" step="0.01" required><br><br>
-
-            <button type="button">Submit</button>
-        </form>
+            <!-- Add User Form -->
 
 
-    </div>
+            <!-- Add Roll Form -->
+            <v-form v-if="showRollForm" @submit.prevent="addRoll">
+                <!-- Replace this with your add roll form using Vuetify components -->
+            </v-form>
+        </v-container>
+    </v-app>
 </template>
   
 <script>
-
 export default {
-
     data() {
         return {
-            selectedRole: "", // Selected role will be stored here
-            roles: ["Guest", "Admin", "Administrator"], // Array of role options
-            users: [],
+            selectedRole: "",
+            roles: ["Guest", "Admin", "Administrator"],
+            userName: "",
+            userEmail: "",
+            userList: [], // To store the submitted user data
+            showForm: true,
+
+            displayedUsers: [], // Initialize an empty array for displayed users
             showUserForm: false,
             showForm: false,
             showRollForm: false,
@@ -109,29 +90,23 @@ export default {
             rollName: "",
             rollDescription: "",
             rollPrice: 0,
+            editDialog: false,
         };
     },
+    computed: {
+        tableHeaders() {
+            return [
+                { text: "Name", value: "name" },
+                { text: "Email", value: "email" },
+                { text: "Role", value: "role" },
+                { text: "Actions", value: "actions", sortable: false },
+            ];
+        },
+    },
     methods: {
-        addUser() {
-            // Handle user addition logic here
-            console.log("User Name:", this.userName);
-            console.log("User Email:", this.userEmail);
-            console.log("selectedRole:", this.selectedRole)
-            // You can send a request to add a user to your backend here
-        },
-        addRoll() {
-            // Handle roll addition logic here
-            console.log("Roll Name:", this.rollName);
-            console.log("Roll Description:", this.rollDescription);
-            console.log("Roll Price:", this.rollPrice);
-            // You can send a request to add a roll to your backend here
-            // Reset form fields
-
-            // Hide the form
-        },
-        addUser() {
+        submitUser() {
             // Validate user inputs if needed
-            if (!this.userName || !this.userEmail) {
+            if (!this.userName || !this.userEmail || !this.selectedRole) {
                 // Handle validation error (e.g., show an error message)
                 return;
             }
@@ -144,18 +119,19 @@ export default {
             };
 
             // Push the new user to the users array
-            this.users.push(newUser);
-
+            this.userList.push(newUser);
             // Clear the form fields
             this.userName = "";
             this.userEmail = "";
             this.selectedRole = "";
             this.showForm = false;
-            this.showUserForm = false;
+            this.showUserForm = true;
+            this.showRollForm = false;
         },
     },
 };
 </script>
+
 <style>
 .action-button {
     margin-right: 10px;
