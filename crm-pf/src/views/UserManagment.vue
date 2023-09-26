@@ -85,7 +85,7 @@
             <label for="rollPrice">Roll Price:</label>
             <input type="number" v-model="rollPrice" step="0.01" required><br><br>
 
-            <button type="submit">Submit</button>
+            <button type="button">Submit</button>
         </form>
 
 
